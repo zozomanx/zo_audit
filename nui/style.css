@@ -1,65 +1,55 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 70vh;
+    width: 70vh;
+    margin: 20vh;
+    padding: 0;
+    background-color: transparent; /* Background color for the entire page */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-#app {
-    width: 60%;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.search-container {
+.menu-bar {
+    background-color: #1988f7;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    justify-content: flex-start;
+    box-sizing: border-box;
+  }
 
-.search-container input, .search-container button {
-    margin: 10px 0;
-    padding: 10px;
-    width: 80%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.search-container button {
-    background-color: #28a745;
+  .menu-bar p {
+    margin-left: 50px;
+  }
+  
+  .item {
     color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.search-container button:hover {
-    background-color: #218838;
-}
-
-.result-container {
-    margin-top: 20px;
-}
-
-.result-container h2 {
-    margin: 20px 0 10px;
-}
-
-.result-container table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.result-container table, th, td {
-    border: 1px solid #ddd;
-}
-
-.result-container th, td {
-    padding: 8px;
-    text-align: left;
-}
+    background-color: transparent;
+    font-size: 18px;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 14px 20px;
+  }
+  
+  .item.title {
+    font-weight: 600;
+  }
+  
+  .item:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .group {
+    margin-left: 20px;
+    margin-right: 0;
+  }
+  .group .item.title{
+    background: red;
+    align-items: right;
+  }
+  .results {
+    background: grey;
+    height: 50vh;
+  }
+  .export {
+    background: purple;
+  }

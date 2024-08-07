@@ -21,7 +21,7 @@ ui_page {
 
 }
 
---[[ files {
-    'nui/sound.html',
-    'nui/sounds/*.ogg'
-} ]]
+files {
+    'nui/ui.html',
+    'nui/style.css'
+}

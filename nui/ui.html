@@ -1,52 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Transactions Search</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
 </head>
 <body>
-    <div id="app" v-if="isAppVisible">
-        <div class="search-container">
-            <h1>Search Financial Transactions</h1>
-            <input type="text" v-model="citizenid" placeholder="Enter Citizen ID">
-            <input type="date" v-model="startDate" placeholder="Start Date">
-            <input type="date" v-model="endDate" placeholder="End Date">
-            <button @click="searchTransactions">Search</button>
+    <div id="app">
+        <div class="menu-bar">
+            <div class="group">
+                <p class="item title">{{ siteName }}</p>
+            </div>
+            <div class="group">
+                <p class="item">Search by:</p>
+            
+            <select id="dropdown-1" text="Dropdown Button" class="dropdown-1">
+                <option value="ssn">SSN</option>
+                <option value="id">ID Number</option>
+            </select >
+
+            <input type="text" id="SSN" name="SSN">
+
+            <button @click="clickSearch">Search</button>
+
+            </div>
         </div>
-        <div v-if="accounts.length > 0" class="result-container">
-            <h2>Bank Accounts ({{ accounts.length }})</h2>
-            <ul>
-                <li v-for="account in accounts" :key="account.account_name">
-                    {{ account.account_name }} - {{ account.account_type }} - Balance: {{ account.account_balance }}
-                </li>
-            </ul>
-            <h2>Transactions</h2>
-            <table v-if="transactions.length > 0">
-                <thead>
-                    <tr>
-                        <th>Account Name</th>
-                        <th>Amount</th>
-                        <th>Reason</th>
-                        <th>Type</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="transaction in transactions" :key="transaction.id">
-                        <td>{{ transaction.account_name }}</td>
-                        <td>{{ transaction.amount }}</td>
-                        <td>{{ transaction.reason }}</td>
-                        <td>{{ transaction.statement_type }}</td>
-                        <td>{{ transaction.date }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p v-else>No transactions found for the specified date range.</p>
+    
+        <div class="results">
+            Results
         </div>
+
+        <div class="export">
+            <button @click="clickExport">Export</button>
+        </div>
+
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-    <script src="script.js"></script>
+
+
 </body>
+<script src="script.js"></script>
 </html>
