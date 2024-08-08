@@ -41,9 +41,9 @@ body {
     font-weight: 600;
   }
   
-  .item:hover {
+  /* .item:hover {
     background-color: rgba(0, 0, 0, 0.1);
-  }
+  } */
   .group {
     margin-left: 20px;
     margin-right: 0;
@@ -70,5 +70,10 @@ body {
     }
     th {
         background-color: #f4f4f4;
+    }
+    .noSearchResults p{
+        margin: auto;
+        font-size: 40px;
+        text-align: center;
     }
 

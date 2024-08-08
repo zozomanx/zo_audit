@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/3.6.14/vuetify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.6.14/dist/vuetify.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
     <div id="app">
@@ -13,21 +17,24 @@
                     <p class="item title">{{ siteName }}</p>
                 </div>
                 <div class="group">
-                    <p class="item">Search by:</p>
-                
+                    <p class="item">What would you like to search?</p>
+                    <!-- <p class="item">SSN</p> -->
+                    
                 <select id="dropdown-1" text="Dropdown Button" class="dropdown-1">
-                    <option value="ssn">SSN</option>
-                    <option value="id">ID Number</option>
+                    <option value="ssn">{{ cidName }}</option>
+                    <option value="id">{{ idName }}</option>
                 </select >
 
                 <input type="text" v-model="searchData">
 
                 <button @click="clickSearch">Search</button>
 
+
                 </div>
             </div>
         
             <div class="results">
+                <v-data-table :items="items"></v-data-table>
                 <table>
                     <thead>
                         <tr>
@@ -50,6 +57,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <div v-if="noSearchResults" class="noSearchResults">
+                    <p>No results found!</p>
+                </div>
             </div>
 
             <div class="export">
