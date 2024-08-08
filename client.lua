@@ -4,7 +4,7 @@ local Config = Config or {}
 function SetDisplay(bool)
     -- NuiDisplay = bool
     SetNuiFocus(bool, bool)
-    print('Sending NUI message to open window')
+    -- print('Sending NUI message to open window')
     SendNUIMessage(
         {
             action = "openAudit"
@@ -17,7 +17,7 @@ RegisterNUICallback(
     function()
         SetNuiFocus(false, false)
         -- NuiDisplay = false
-        print('NUI Callback to close window')
+        -- print('NUI Callback to close window')
     end
 )
 
@@ -43,7 +43,7 @@ exports.ox_target:addBoxZone(
 AddEventHandler(
     "zo_audit:client:openui",
     function()
-        print('Target Clicked, opening window.')
+        -- print('Target Clicked, opening window.')
         SetDisplay(true)
     end
 )
@@ -55,12 +55,14 @@ RegisterNUICallback('closeAudit', function()
 end)
 
 RegisterNUICallback('search', function(searchData)
-    print(searchData.searchData)
-    TriggerServerEvent('zo_audit:server:search', searchData.searchData)
+    -- print(searchData.searchData)
+    local src = GetPlayerServerId(PlayerId())
+    print('Client script src is ' .. src)
+    TriggerServerEvent('zo_audit:server:search', src, searchData.searchData)
 end)
 
 RegisterNetEvent('zo_audit:client:displayResults',function (statementQuery)
-    print('Got NUI result update request ' .. tprint(statementQuery))
+    -- print('Got NUI result update request ' .. tprint(statementQuery))
     SendNUIMessage(
         {
             action = "updateResults",
@@ -73,7 +75,7 @@ end)
 
 -- debug
 
-function tprint (tbl, indent)
+--[[ function tprint (tbl, indent)
     if not indent then indent = 0 end
     local toprint = string.rep(" ", indent) .. "{\r\n"
     indent = indent + 2 
@@ -96,4 +98,4 @@ function tprint (tbl, indent)
     end
     toprint = toprint .. string.rep(" ", indent-2) .. "}"
     return toprint
-  end
+  end ]]

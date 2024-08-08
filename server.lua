@@ -6,22 +6,25 @@ local Statements = {}
 print('server started')
 
 -- Search for statements using citizenid
-local function findStatements(searchData)
+local function findStatements(src, searchData)
+
+    local src = src
     CreateThread(function()
-        print('thread started')
+        -- print('thread started')
 
         Statements = MySQL.query.await('SELECT * FROM bank_statements where citizenid = ?', {searchData})
 
-        print(#Statements .. ' statements found')
+        -- print(#Statements .. ' statements found')
 
         -- Send event to client to update NUI results
-        TriggerClientEvent('zo_audit:client:displayResults', -1, Statements)
-        print('after TriggerClientEvent')
+        TriggerClientEvent('zo_audit:client:displayResults', src, Statements)
+        -- print('after TriggerClientEvent')
     end)
 end
 
 -- Get event from client for searching statements
-RegisterNetEvent('zo_audit:server:search', function(searchData)
-    print(searchData)
-    findStatements(searchData)
+RegisterNetEvent('zo_audit:server:search', function(src, searchData)
+    -- print('src is ' .. src)
+    -- print(searchData)
+    findStatements(src, searchData)
 end)

@@ -11,12 +11,17 @@ const app = Vue.createApp({
         openAudit(){
             this.isAuditOpen = true
         },
-        clickSearch(){
-            console.log('Searching...')
-            console.log(this.searchData)
-            axios.post(`https://${GetParentResourceName()}/search`, {
-                searchData: this.searchData
-            });
+        async clickSearch(){
+            try {
+                // console.log('Searching...')
+                // console.log(this.searchData)
+                await axios.post(`https://${GetParentResourceName()}/search`, {
+                    searchData: this.searchData
+                });
+            } catch (error) {
+                console.error('Error during search request:', error.message);
+                console.error('Full error object:', error);
+            }
         },
         clickExport(){
             console.log('Exporting...')
@@ -28,16 +33,20 @@ const app = Vue.createApp({
             if (action === "openAudit") {
                 this.openAudit()
             } else if (action === "updateResults") {
-                console.log('updateResults triggered via handlemessage')
+                // console.log('updateResults triggered via handlemessage')
                 this.displayResults(statements)
             } else {
-                console.log('nothing')
+                // console.log('nothing')
             }
         },
-        closeAudit() {
+        async closeAudit() {
             this.isAuditOpen = false
-        
-            axios.post(`https://${GetParentResourceName()}/closeAudit`, {})
+            try {
+                await axios.post(`https://${GetParentResourceName()}/closeAudit`, {})
+            } catch (error) {
+                console.error('Error during closeAudit request:', error.message);
+                console.error('Full error object:', error);
+            }
         },
         handleKeydown(event) {
             if (event.key === "Escape") {
@@ -45,16 +54,14 @@ const app = Vue.createApp({
             }
         },
         displayResults(statements) {
-            console.log('displayResults called')
+            // console.log('displayResults called')
             this.results = statements
         },
         formatDate(timestamp) {
             const date = new Date(timestamp);
             return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
         },
-
     },
-    
     mounted() {
         document.addEventListener("keydown", this.handleKeydown)
         window.addEventListener("message", this.handleMessage)
