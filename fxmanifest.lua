@@ -13,6 +13,7 @@ client_scripts {
 }
 
 server_scripts {
+    '@oxmysql/lib/MySQL.lua',
     'server.lua'
 }
 
@@ -23,5 +24,6 @@ ui_page {
 
 files {
     'nui/ui.html',
-    'nui/style.css'
+    'nui/style.css',
+    'nui/script.js'
 }

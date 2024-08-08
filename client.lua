@@ -2,13 +2,12 @@
 local Config = Config or {}
 
 function SetDisplay(bool)
-    NuiDisplay = bool
+    -- NuiDisplay = bool
     SetNuiFocus(bool, bool)
     print('Sending NUI message to open window')
     SendNUIMessage(
         {
-            type = "ui",
-            status = bool
+            action = "openAudit"
         }
     )
 end
@@ -17,7 +16,7 @@ RegisterNUICallback(
     "close",
     function()
         SetNuiFocus(false, false)
-        NuiDisplay = false
+        -- NuiDisplay = false
         print('NUI Callback to close window')
     end
 )
@@ -32,7 +31,7 @@ exports.ox_target:addBoxZone(
         options = {
             {
                 name = "Audit Terminal",
-                event = "ox_target:zo_auditui",
+                event = "zo_audit:client:openui",
                 icon = "fa-solid fa-computer",
                 label = "Open audit terminal"
             }
@@ -42,9 +41,20 @@ exports.ox_target:addBoxZone(
 
 -- EventHandler for clicking inside of the BoxZone
 AddEventHandler(
-    "ox_target:zo_auditui",
+    "zo_audit:client:openui",
     function()
         print('Target Clicked, opening window.')
         SetDisplay(true)
     end
 )
+
+-- NUI Callback
+
+RegisterNUICallback('closeAudit', function()
+    SetNuiFocus(false, false)
+end)
+
+RegisterNUICallback('search', function(searchData)
+    print(searchData.searchData)
+    TriggerServerEvent('zo_audit:server:search', searchData.searchData)
+end)

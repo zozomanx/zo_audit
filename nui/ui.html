@@ -2,36 +2,39 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
 </head>
 <body>
     <div id="app">
-        <div class="menu-bar">
-            <div class="group">
-                <p class="item title">{{ siteName }}</p>
+        <div class="audit-container" v-show="isAuditOpen">
+            <div class="menu-bar">
+                <div class="group">
+                    <p class="item title">{{ siteName }}</p>
+                </div>
+                <div class="group">
+                    <p class="item">Search by:</p>
+                
+                <select id="dropdown-1" text="Dropdown Button" class="dropdown-1">
+                    <option value="ssn">SSN</option>
+                    <option value="id">ID Number</option>
+                </select >
+
+                <input type="text" v-model="searchData">
+
+                <button @click="clickSearch">Search</button>
+
+                </div>
             </div>
-            <div class="group">
-                <p class="item">Search by:</p>
-            
-            <select id="dropdown-1" text="Dropdown Button" class="dropdown-1">
-                <option value="ssn">SSN</option>
-                <option value="id">ID Number</option>
-            </select >
-
-            <input type="text" id="SSN" name="SSN">
-
-            <button @click="clickSearch">Search</button>
-
+        
+            <div class="results">
+                Results
             </div>
-        </div>
-    
-        <div class="results">
-            Results
-        </div>
 
-        <div class="export">
-            <button @click="clickExport">Export</button>
+            <div class="export">
+                <button @click="clickExport">Export</button>
+                <button @click="closeAudit">Close</button>
+            </div>
         </div>
 
     </div>
