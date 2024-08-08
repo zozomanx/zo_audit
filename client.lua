@@ -12,15 +12,6 @@ function SetDisplay(bool)
     )
 end
 
-RegisterNUICallback(
-    "close",
-    function()
-        SetNuiFocus(false, false)
-        -- NuiDisplay = false
-        -- print('NUI Callback to close window')
-    end
-)
-
 -- Set ox_target BoxZone
 exports.ox_target:addBoxZone(
     {
@@ -50,15 +41,20 @@ AddEventHandler(
 
 -- NUI Callback
 
-RegisterNUICallback('closeAudit', function()
+RegisterNUICallback('closeAudit', function(_, cb)
     SetNuiFocus(false, false)
+
+    cb('ok')
 end)
 
-RegisterNUICallback('search', function(searchData)
+RegisterNUICallback('search', function(searchData, cb)
     -- print(searchData.searchData)
     local src = GetPlayerServerId(PlayerId())
-    print('Client script src is ' .. src)
+
+    -- print('Client script src is ' .. src)
     TriggerServerEvent('zo_audit:server:search', src, searchData.searchData)
+    
+    cb('ok')
 end)
 
 RegisterNetEvent('zo_audit:client:displayResults',function (statementQuery)

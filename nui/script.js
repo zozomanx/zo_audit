@@ -15,12 +15,12 @@ const app = Vue.createApp({
             try {
                 // console.log('Searching...')
                 // console.log(this.searchData)
-                await axios.post(`https://${GetParentResourceName()}/search`, {
+                axios.post(`https://${GetParentResourceName()}/search`, {
                     searchData: this.searchData
                 });
             } catch (error) {
                 console.error('Error during search request:', error.message);
-                console.error('Full error object:', error);
+                console.error('Full error object:', error, error.response);
             }
         },
         clickExport(){
