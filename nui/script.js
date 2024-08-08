@@ -3,7 +3,8 @@ const app = Vue.createApp({
         return {
             isAuditOpen: false,
             siteName: 'Financial Transaction Audit',
-            searchData: ''
+            searchData: 'UDT96695',
+            results: []
         }
     },
     methods: {
@@ -22,25 +23,41 @@ const app = Vue.createApp({
         },
         handleMessage(event) {
             const action = event.data.action
+            const statements = event.data.statements
+
             if (action === "openAudit") {
                 this.openAudit()
+            } else if (action === "updateResults") {
+                console.log('updateResults triggered via handlemessage')
+                this.displayResults(statements)
+            } else {
+                console.log('nothing')
             }
         },
         closeAudit() {
             this.isAuditOpen = false
         
-            axios.post(`https://${GetParentResourceName()}/closeAudit`, {});
+            axios.post(`https://${GetParentResourceName()}/closeAudit`, {})
         },
         handleKeydown(event) {
             if (event.key === "Escape") {
                 this.closeAudit();
             }
         },
+        displayResults(statements) {
+            console.log('displayResults called')
+            this.results = statements
+        },
+        formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        },
 
     },
     
     mounted() {
         document.addEventListener("keydown", this.handleKeydown)
+        window.addEventListener("message", this.handleMessage)
         window.addEventListener("message", this.handleMessage)
         console.log('mounted')
     },

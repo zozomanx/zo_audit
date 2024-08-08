@@ -28,7 +28,28 @@
             </div>
         
             <div class="results">
-                Results
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Citizen ID</th>
+                            <th>Account Name</th>
+                            <th>Amount</th>
+                            <th>Reason</th>
+                            <th>Statement Type</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="results && results.length > 0">
+                        <tr v-for="result in results" :key="results.id">
+                            <td>{{ result.citizenid }}</td>
+                            <td>{{ result.account_name }}</td>
+                            <td>${{ result.amount }}</td>
+                            <td>{{ result.reason }}</td>
+                            <td>{{ result.statement_type }}</td>
+                            <td>{{ formatDate(result.date) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <div class="export">
