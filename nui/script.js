@@ -24,7 +24,7 @@ createApp({
                 { title: 'Date', value: 'date' }
             ],
             selectedOption: 'SSN',
-            pasteBinAPIKey: ''
+            pasteeAPIKey: ''
         };
     },
     computed: {
@@ -57,43 +57,51 @@ createApp({
         },
         async clickExport() {
             console.log('Exporting...');
-            // upload the data in results to pastebin api
-            const results = this.results
+            // upload the data in results to Pastee api
+            const results = this.results.map(result => {
 
-            // Prepare the data string
-            const header = 'Citizen ID, Account Name, Amount, Reason, Statement Type, Date\n';
-            const dataString = results.map(result => {
-                // Convert Unix timestamp (in milliseconds) to a human-readable date format
-                const date = new Date(result.date).toISOString().replace('T', ' ').substring(0, 19);
+                return {
+                    'Citizen ID': result.citizenid,
+                    'Account Name': result.account_name,
+                    'Amount': result.amount,
+                    'Reason': result.reason,
+                    'Statement Type': result.statement_type,
+                    'Date': new Date(result.date).toISOString().replace('T', ' ').substring(0, 19)
+                };
 
-                // Escape commas in data fields
-                const escapeCommas = (str) => str.replace(/"/g, '""');
+            });
 
-                return `${escapeCommas(result.citizenid)}, ${escapeCommas(result.account_name)}, ${result.amount}, ${escapeCommas(result.reason)}, ${escapeCommas(result.statement_type)}, ${date}`;
-                }).join('\n');
-
-            const fullDataString = header + dataString;
+            // Use PapaParse to convert the data to CSV format
+            const csv = Papa.unparse(results, {
+                quotes: true, // Enclose all fields in quotes
+                quoteChar: '"', // Character used to quote fields
+                escapeChar: '"', // Character used to escape quotes within fields
+                delimiter: ",", // Delimiter between fields
+                header: true, // Include headers in the CSV
+            });
 
             const pasteData = {
-                api_dev_key: this.pasteBinAPIKey,
-                api_option: 'paste',
-                api_paste_private: '1', // 0=public, 1=unlisted, 2=private
-                api_paste_code: fullDataString,
-                api_paste_name:  'Audit Results ' + this.selectedOption + ' ' + this.searchData
+                description: `Audit Results ${this.selectedOption} ${this.searchData}`,
+                sections: [
+                    {
+                        name:  'Audit Results ' + this.selectedOption + ' ' + this.searchData,
+                        syntax: 'text',
+                        contents: csv
+                    }
+                ]
             };
-
-            const formBody = Object.keys(pasteData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(pasteData[key])).join('&');
-
+        
             try {
-                const response = await axios.post('https://pastebin.com/api/api_post.php', formBody, {
+                const response = await axios.post('https://api.paste.ee/v1/pastes', pasteData, {
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/json',
+                        'X-Auth-Token': this.pasteeAPIKey // Replace this with your Pastee API key
                     }
                 });
         
-                console.log('Pastebin response:', response.data);
+                console.log('Pastee response:', response.data);
             } catch (error) {
-                console.error('Error uploading to Pastebin:', error.message);
+                console.error('Error uploading to Pastee:', error.message);
             }
 
             // try {
@@ -109,7 +117,7 @@ createApp({
             const cidName = event.data.citizenidName;
             const siteName = event.data.siteName;
             const idName = event.data.idName;
-            const pasteBinAPIKey = event.data.pasteBinAPIKey;
+            const pasteeAPIKey = event.data.pasteeAPIKey;
 
             if (action === "openAudit") {
                 this.openAudit();
@@ -120,7 +128,7 @@ createApp({
                 this.cidName = cidName;
                 this.selectedOption = cidName;
                 this.idName = idName;
-                this.pasteBinAPIKey = pasteBinAPIKey;
+                this.pasteeAPIKey = pasteeAPIKey;
             }
         },
         async closeAudit() {

@@ -4,7 +4,7 @@ local Config = Config or {}
 local CIDName = Config.citizenidName
 local SiteName = Config.siteName
 local IdName = Config.idName
-local pasteBinAPIKey = Config.pasteBinAPIKey
+local pasteeAPIKey = Config.pasteeAPIKey
 
 
 -- Debug
@@ -19,7 +19,7 @@ function InitNUI()
             citizenidName = CIDName,
             siteName = SiteName,
             idName = IdName,
-            pasteBinAPIKey = pasteBinAPIKey
+            pasteeAPIKey = pasteeAPIKey
 
         }
     )
