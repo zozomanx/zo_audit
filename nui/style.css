@@ -1,14 +1,13 @@
-body {
-    /* display: flex; */
-    justify-content: center;
-    align-items: center;
-    height: 70vh;
-    width: 70vh;
+html, body {
+    height: 100%;
     margin: 0;
-    padding: 0;
-    background-color: transparent; /* Background color for the entire page */
-    margin-left: auto;
-    margin-right: auto;
+    overflow: hidden; /* Prevent scrollbars */
+}
+
+.v-app {
+    max-width: 70vh; 
+    max-height: 50vh; 
+    margin: 0 auto; 
     margin-top: 15vh;
 }
 
@@ -17,7 +16,7 @@ body {
     width:inherit;
 } */
 
-.menu-bar {
+/* .menu-bar {
     background-color: #1988f7;
     display: flex;
     justify-content: flex-start;
@@ -39,12 +38,12 @@ body {
   
   .item.title {
     font-weight: 600;
-  }
+  } */
   
   /* .item:hover {
     background-color: rgba(0, 0, 0, 0.1);
   } */
-  .group {
+  /* .group {
     margin-left: 20px;
     margin-right: 0;
   }
@@ -75,5 +74,5 @@ body {
         margin: auto;
         font-size: 40px;
         text-align: center;
-    }
+    } */
 
