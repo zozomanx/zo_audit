@@ -5,8 +5,11 @@ local CIDName = Config.citizenidName
 local SiteName = Config.siteName
 local IdName = Config.idName
 
+
 -- Debug
 Wait(100)
+
+----------- FUNCTIONS -----------
 
 function InitNUI()
     SendNUIMessage(
@@ -19,18 +22,17 @@ function InitNUI()
     )
 end
 
-InitNUI()
-
 function SetDisplay(bool)
-    -- NuiDisplay = bool
     SetNuiFocus(bool, bool)
-    -- print('Sending NUI message to open window')
     SendNUIMessage(
         {
             action = "openAudit"
         }
     )
 end
+----------- FUNCTIONS -----------
+
+InitNUI()
 
 -- Debug
 SetDisplay(true)
@@ -75,7 +77,17 @@ RegisterNUICallback('search', function(searchData, cb)
     local src = GetPlayerServerId(PlayerId())
 
     -- print('Client script src is ' .. src)
-    TriggerServerEvent('zo_audit:server:search', src, searchData.searchData)
+    TriggerServerEvent('zo_audit:server:search', src, searchData.searchData, searchData.selectedOption)
+
+    cb('ok')
+end)
+
+-- Wait for the NUI export callback and then trigger the csv export function
+RegisterNUICallback('export', function(_, cb)
+    -- print(tprint(Statements))
+
+    TriggerServerEvent('zo_audit:server:export')
+    print('Triggered Client to server Export')
 
     cb('ok')
 end)
@@ -83,6 +95,7 @@ end)
 -- Listen for event from server and then sent NUI message to JS with the results from the search query in statementQuery
 RegisterNetEvent('zo_audit:client:displayResults',function (statementQuery)
     -- print('Got NUI result update request ' .. tprint(statementQuery))
+
     SendNUIMessage(
         {
             action = "updateResults",
@@ -93,29 +106,31 @@ RegisterNetEvent('zo_audit:client:displayResults',function (statementQuery)
 end)
 
 
+
+
 -- debug
 
---[[ function tprint (tbl, indent)
-    if not indent then indent = 0 end
-    local toprint = string.rep(" ", indent) .. "{\r\n"
-    indent = indent + 2 
-    for k, v in pairs(tbl) do
-      toprint = toprint .. string.rep(" ", indent)
-      if (type(k) == "number") then
-        toprint = toprint .. "[" .. k .. "] = "
-      elseif (type(k) == "string") then
-        toprint = toprint  .. k ..  "= "   
-      end
-      if (type(v) == "number") then
-        toprint = toprint .. v .. ",\r\n"
-      elseif (type(v) == "string") then
-        toprint = toprint .. "\"" .. v .. "\",\r\n"
-      elseif (type(v) == "table") then
-        toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
-      else
-        toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
-      end
-    end
-    toprint = toprint .. string.rep(" ", indent-2) .. "}"
-    return toprint
-  end ]]
+-- function tprint (tbl, indent)
+--     if not indent then indent = 0 end
+--     local toprint = string.rep(" ", indent) .. "{\r\n"
+--     indent = indent + 2 
+--     for k, v in pairs(tbl) do
+--       toprint = toprint .. string.rep(" ", indent)
+--       if (type(k) == "number") then
+--         toprint = toprint .. "[" .. k .. "] = "
+--       elseif (type(k) == "string") then
+--         toprint = toprint  .. k ..  "= "   
+--       end
+--       if (type(v) == "number") then
+--         toprint = toprint .. v .. ",\r\n"
+--       elseif (type(v) == "string") then
+--         toprint = toprint .. "\"" .. v .. "\",\r\n"
+--       elseif (type(v) == "table") then
+--         toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
+--       else
+--         toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
+--       end
+--     end
+--     toprint = toprint .. string.rep(" ", indent-2) .. "}"
+--     return toprint
+--   end 

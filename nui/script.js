@@ -32,18 +32,31 @@ createApp({
         },
         async clickSearch() {
             try {
-                const response = await axios.post(`https://${GetParentResourceName()}/search`, {
-                    searchData: this.searchData,
-                    selectedOption: this.selectedOption
-                });
+                if (this.selectedOption === this.cidName) {   
+                    const response = await axios.post(`https://${GetParentResourceName()}/search`, {
+                        searchData: this.searchData,
+                        selectedOption: this.selectedOption
+                    });
+                } else if (this.selectedOption === this.idName) {
+                    const response = await axios.post(`https://${GetParentResourceName()}/search`, {
+                        searchData: this.searchData,
+                        selectedOption: this.selectedOption
+                    });
+                } else { console.error('Invalid search option selected.'); }
                 // Handle response if needed
             } catch (error) {
                 console.error('Error during search request:', error.message);
                 console.error('Full error object:', error);
             }
         },
-        clickExport() {
+        async clickExport() {
             console.log('Exporting...');
+            try {
+                await axios.post(`https://${GetParentResourceName()}/export`, {});
+            } catch (error) {
+                console.error('Error during export request:', error.message);
+                console.error('Full error object:', error);
+            }
         },
         handleMessage(event) {
             const action = event.data.action;
