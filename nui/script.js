@@ -23,6 +23,7 @@ createApp({
                 { title: 'Statement Type', value: 'statement_type' },
                 { title: 'Date', value: 'date' }
             ],
+            selectedOption: 'SSN',
         };
     },
     methods: {
@@ -58,12 +59,16 @@ createApp({
             } else if (action === "initVariables") {
                 this.siteName = siteName;
                 this.cidName = cidName;
+                this.selectedOption = cidName;
                 this.idName = idName;
             }
         },
         async closeAudit() {
             this.isAuditOpen = false;
             this.results = [];
+            this.noSearchResults = false;
+            this.searchData = '';
+
             try {
                 await axios.post(`https://${GetParentResourceName()}/closeAudit`, {});
             } catch (error) {

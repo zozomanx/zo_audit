@@ -5,12 +5,31 @@ html, body {
 }
 
 .v-app {
-    max-width: 70vh; 
+    max-width: 90vh; 
     max-height: 50vh; 
     margin: 0 auto; 
     margin-top: 15vh;
+    background: transparent;
 }
 
+.v-select .v-text-field {
+    max-width: 20vh; 
+}
+
+.v-data-table {
+    max-height: 600px; /* Match the height set in the component */
+    overflow-y: auto;  /* Enable vertical scrolling */
+}
+
+.table th, .table td {
+    white-space: nowrap; /* Prevent text wrapping for better table layout */
+}
+
+.v-data-table-header__content{
+    font-size: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
 /* .audit-container {
     height:inherit;
     width:inherit;

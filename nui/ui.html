@@ -19,6 +19,7 @@
                     <v-card-subtitle>What would you like to search?</v-card-subtitle>
 
                     <v-select
+                        v-model="selectedOption"
                         :items="[cidName, idName]"
                         label="Select Option"
                         class="my-2"
@@ -32,7 +33,7 @@
                         class="my-2"
                     ></v-text-field>
 
-                    <v-btn @click="clickSearch" color="primary" class="my-2">Search</v-btn>
+                    <v-btn @click="clickSearch" color="primary" class="my-2 search">Search</v-btn>
                     
                     <v-text-field
                         v-model="searchGrid"
@@ -43,20 +44,23 @@
                         single-line
                     ></v-text-field>
 
-                    <v-data-table
+                    
+
+                    <v-data-table class="table"
                         :headers="headers"
                         :items="results"
                         :search="searchGrid"
-
+                        fixed-header
                         item-key="id"
                         class="elevation-1 my-4"
-                        :items-per-page-options="[{value: 10, title: '10'}]"
+                        :items-per-page-options="[10, 25, 50, 100]"
+
                     >   
                         <template v-slot:item.date="{ item }">
                             {{ formatDate(item.date) }}
                         </template>
                         <template v-slot:no-data>
-                            <v-alert type="info" class="mt-4" v-if="noSearchResults">
+                            <v-alert type="error" class="mt-4 text-h4" v-if="noSearchResults">
                                 No results found!
                             </v-alert>
                         </template>
