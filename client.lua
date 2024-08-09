@@ -4,6 +4,7 @@ local Config = Config or {}
 local CIDName = Config.citizenidName
 local SiteName = Config.siteName
 local IdName = Config.idName
+local pasteBinAPIKey = Config.pasteBinAPIKey
 
 
 -- Debug
@@ -17,7 +18,9 @@ function InitNUI()
             action = 'initVariables',
             citizenidName = CIDName,
             siteName = SiteName,
-            idName = IdName
+            idName = IdName,
+            pasteBinAPIKey = pasteBinAPIKey
+
         }
     )
 end
@@ -82,15 +85,15 @@ RegisterNUICallback('search', function(searchData, cb)
     cb('ok')
 end)
 
--- Wait for the NUI export callback and then trigger the csv export function
-RegisterNUICallback('export', function(_, cb)
-    -- print(tprint(Statements))
+-- -- Wait for the NUI export callback and then trigger the csv export function
+-- RegisterNUICallback('export', function(_, cb)
+--     -- print(tprint(Statements))
 
-    TriggerServerEvent('zo_audit:server:export')
-    print('Triggered Client to server Export')
+--     TriggerServerEvent('zo_audit:server:export')
+--     print('Triggered Client to server Export')
 
-    cb('ok')
-end)
+--     cb('ok')
+-- end)
 
 -- Listen for event from server and then sent NUI message to JS with the results from the search query in statementQuery
 RegisterNetEvent('zo_audit:client:displayResults',function (statementQuery)
