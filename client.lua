@@ -115,7 +115,7 @@ RegisterNUICallback('search', function(searchData, cb)
     local src = GetPlayerServerId(PlayerId())
 
     -- print('Client script src is ' .. src)
-    TriggerServerEvent('zo_audit:server:search', src, searchData.searchData, searchData.selectedOption)
+    TriggerServerEvent('zo_audit:server:search', src, searchData.searchData, searchData.startDate, searchData.endDate, searchData.selectedOption)
 
     cb('ok')
 end)

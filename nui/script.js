@@ -74,11 +74,15 @@ createApp({
                 if (this.selectedOption === this.cidName) {
                     const response = await axios.post(`https://${GetParentResourceName()}/search`, {
                         searchData: this.searchData,
+                        startDate: this.startDate,
+                        endDate: this.endDate,
                         selectedOption: this.selectedOption
                     });
                 } else if (this.selectedOption === this.idName) {
                     const response = await axios.post(`https://${GetParentResourceName()}/search`, {
                         searchData: this.searchData,
+                        startDate: this.startDate,
+                        endDate: this.endDate,
                         selectedOption: this.selectedOption
                     });
                 } else {

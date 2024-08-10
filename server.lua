@@ -6,15 +6,14 @@ local Statements = {}
 ----------- FUNCTIONS -----------
 
 -- Search for statements using citizenid and send results to the player source who requested it
-local function findStatements(src, searchData, selectedOption)
-
+local function findStatements(src, searchData, startDate, endDate, selectedOption)
 
     CreateThread(function()
         -- Statements = MySQL.query.await('SELECT * FROM bank_statements where citizenid = ?', {searchData})
         if selectedOption == Config.citizenidName then
-            Statements = MySQL.query.await('SELECT * FROM bank_statements where citizenid = ?', {searchData})
+            Statements = MySQL.query.await('SELECT * FROM bank_statements where citizenid = ? AND date BETWEEN ? AND ?', {searchData, startDate, endDate})
         else if selectedOption == Config.idName then
-            Statements = MySQL.query.await('SELECT bs.account_name, bs.amount, bs.citizenid, bs.date, bs.id, bs.reason, bs.statement_type, p.cid FROM bank_statements bs JOIN players p ON bs.citizenid = p.citizenid WHERE p.cid = ?', {searchData})
+            Statements = MySQL.query.await('SELECT bs.account_name, bs.amount, bs.citizenid, bs.date, bs.id, bs.reason, bs.statement_type, p.cid FROM bank_statements bs JOIN players p ON bs.citizenid = p.citizenid WHERE p.cid = ? AND date BETWEEN ? AND ?', {searchData, startDate, endDate})
         end
 
         end
@@ -31,11 +30,10 @@ end
 ----------- EVENT HANDLERS -----------
 
 -- Get event from client for searching statements
-RegisterNetEvent('zo_audit:server:search', function(src, searchData, selectedOption)
+RegisterNetEvent('zo_audit:server:search', function(src, searchData, startDate, endDate, selectedOption)
     -- print('src is ' .. src)
     -- print(searchData)
-    
-        findStatements(src, searchData, selectedOption)
+        findStatements(src, searchData, startDate, endDate, selectedOption)
     
 end)
 
