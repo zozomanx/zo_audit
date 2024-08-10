@@ -20,9 +20,12 @@
         <v-app v-if="isAuditOpen" class="v-app">
             <v-container class="py-4" >
                 <v-card class="pa-4">
-                    <v-card-title class="text-center text-h3 font-weight-bold">{{ siteName }}</v-card-title>
+                    <v-card-title class="text-center text-h3 font-weight-black">{{ siteName }}</v-card-title>
+                    
+<v-row>
+    <v-col cols="6">
+                <v-div>
                     <v-card-subtitle>What would you like to search?</v-card-subtitle>
-
                     <v-select
                         v-model="selectedOption"
                         :items="[cidName, idName]"
@@ -30,25 +33,33 @@
                         class="my-2"
                     ></v-select>
                 
-                <v-form @submit.prevent="clickSearch" class="my-2">
-                    <v-text-field
-                        v-model="searchData"
-                        :label="'Search system for ' + selectedOption"
-                        prepend-inner-icon="mdi-magnify"
-                        outlined
-                        class=""
-                    ></v-text-field>
+                    <v-form @submit.prevent="clickSearch" class="my-2">
+                        <v-text-field
+                            v-model="searchData"
+                            :label="'Search by ' + selectedOption"
+                            prepend-inner-icon="mdi-magnify"
+                            outlined
+                            class=""
+                        ></v-text-field>
 
-                    <v-btn type="submit" @click="clickSearch" color="primary" class="search">Search</v-btn>
-                    <v-div class="date-range-picker">
-                        <v-span class="ml-4 font-weight-bold">Start Date: </v-span>
-                        <input type="date" id="start-date" name="start-date" v-model="startDate">
-                    
-                        <v-span class="ml-4 font-weight-bold">End Date: </v-span>
-                        <input type="date" id="end-date" name="end-date" v-model="endDate">
-                    </v-div>
-                </v-form>
-                    
+                        <v-btn type="submit" @click="clickSearch" color="primary" class="search">Search</v-btn>
+                        <v-div class="date-range-picker">
+                            <v-span class="ml-4 font-weight-bold">Start Date: </v-span>
+                            <input type="date" id="start-date" name="start-date" v-model="startDate">
+                        
+                            <v-span class="ml-4 font-weight-bold">End Date: </v-span>
+                            <input type="date" id="end-date" name="end-date" v-model="endDate">
+                        </v-div>
+                    </v-form>
+                </v-div>
+            </v-col>  
+
+            <v-col cols="6" class="d-flex justify-center ">
+                <v-div>
+                    <img src="img/fleeca.png" alt="Fleeca Image">
+                </v-div>
+            </v-col>
+        </v-row>
                 <v-divider class="my-4 border-opacity-50" :thickness="5"></v-divider>
 
                     <!--Data grid search box  -->

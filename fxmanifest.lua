@@ -26,5 +26,6 @@ ui_page {
 files {
     'nui/ui.html',
     'nui/style.css',
-    'nui/script.js'
+    'nui/script.js',
+    'nui/img/*.*'
 }
