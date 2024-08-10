@@ -48,11 +48,10 @@
                         <input type="date" id="end-date" name="end-date" v-model="endDate">
                     </v-div>
                 </v-form>
-
-
                     
                 <v-divider class="my-4 border-opacity-50" :thickness="5"></v-divider>
 
+                    <!--Data grid search box  -->
                     <v-text-field
                         v-model="searchGrid"
                         label="Search table"
@@ -62,6 +61,7 @@
                         single-line
                     ></v-text-field>
 
+                    <!-- Data grid -->
                     <v-data-table class="table elevation-1 my-4"
                         :headers="headers"
                         :items="results"
@@ -82,11 +82,12 @@
                             </v-alert>
                         </template>
                     </v-data-table>
+                    <!-- Buttons to export and close -->
                     <v-btn @click="clickExport" color="primary" class="mx-2" :disabled="isExportDisabled || pasteeError[0] || pasteeResponse.success ">Export</v-btn>
                     <v-btn @click="closeAudit" color="error" class="mx-2">Close</v-btn>
                     <v-alert  v-if="pasteeResponse.success" type="success" class="mt-4 text-center" >
                         <span>Export successful! Access it at [{{ pasteeResponse.link }}]</span>
-                        <v-tooltip text="Copy and paste the url into a browser, download the file, and rename .txt to .csv">
+                        <v-tooltip text="Copy and paste the URL into a browser, download the file, and rename .txt to .csv">
                             <template v-slot:activator="{ props }">
                               <v-icon color="grey-lighten-1" v-bind="props" v-on="on" class="ml-2">
                                 mdi-help-circle

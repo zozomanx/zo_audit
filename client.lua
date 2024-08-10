@@ -64,7 +64,7 @@ exports.ox_target:addBoxZone(
                 name = "Audit Terminal",
                 event = "zo_audit:client:openui",
                 icon = "fa-solid fa-computer",
-                label = "Open audit terminal"
+                label = "Open Audit Terminal"
             }
         }
     }

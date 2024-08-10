@@ -1,7 +1,7 @@
-const {createApp} = Vue;
-const {createVuetify} = Vuetify;
+const {createApp} = Vue
+const {createVuetify} = Vuetify
 
-const vuetify = createVuetify();
+const vuetify = createVuetify()
 
 createApp({
     data() {
@@ -20,6 +20,7 @@ createApp({
             dates: {start: null, end: null},
             dateRangeText: '',
             searchGrid: '',
+            // Table headers
             headers: [{
                     title: 'Citizen ID',
                     value: 'citizenid',
@@ -55,17 +56,20 @@ createApp({
             pasteeAPIKey: '',
             pasteeResponse: [],
             pasteeError: []
-        };
+        }
     },
     computed: {
+        // Check if the export button should be disabled
         isExportDisabled() {
-            return this.results.length === 0;
+            return this.results.length === 0
         }
     },
     methods: {
+        // Open the audit window
         openAudit() {
-            this.isAuditOpen = true;
+            this.isAuditOpen = true
         },
+        // Send a request to the server to search for transactions
         async clickSearch() {
             try {
                 this.pasteeError = []
@@ -77,25 +81,26 @@ createApp({
                         startDate: this.startDate,
                         endDate: this.endDate,
                         selectedOption: this.selectedOption
-                    });
+                    })
                 } else if (this.selectedOption === this.idName) {
                     const response = await axios.post(`https://${GetParentResourceName()}/search`, {
                         searchData: this.searchData,
                         startDate: this.startDate,
                         endDate: this.endDate,
                         selectedOption: this.selectedOption
-                    });
+                    })
                 } else {
-                    console.error('Invalid search option selected.');
+                    console.error('Invalid search option selected.')
                 }
                 // Handle response if needed
             } catch (error) {
-                console.error('Error during search request:', error.message);
-                console.error('Full error object:', error);
+                console.error('Error during search request:', error.message)
+                console.error('Full error object:', error)
             }
         },
+        // Export the results to a CSV file using Pastee API
         async clickExport() {
-            // console.log('Exporting...');
+            // console.log('Exporting...')
             // upload the data in results to Pastee api
             const results = this.results.map(result => {
 
@@ -106,9 +111,9 @@ createApp({
                     'Reason': result.reason,
                     'Statement Type': result.statement_type,
                     'Date': new Date(result.date).toISOString().replace('T', ' ').substring(0, 19)
-                };
+                }
 
-            });
+            })
 
             // Use PapaParse to convert the data to CSV format
             const csv = Papa.unparse(results, {
@@ -117,8 +122,9 @@ createApp({
                 escapeChar: '"', // Character used to escape quotes within fields
                 delimiter: ",", // Delimiter between fields
                 header: true, // Include headers in the CSV
-            });
+            })
 
+            // Pastee API data
             const pasteData = {
                 description: `Audit Results ${this.selectedOption} ${this.searchData}`,
                 sections: [{
@@ -126,7 +132,7 @@ createApp({
                     syntax: 'text',
                     contents: csv
                 }]
-            };
+            }
 
             try {
                 const response = await axios.post('https://api.paste.ee/v1/pastes', pasteData, {
@@ -134,101 +140,108 @@ createApp({
                         'Content-Type': 'application/json',
                         'X-Auth-Token': this.pasteeAPIKey
                     }
-                });
+                })
 
-                this.pasteeResponse = response.data;
+                this.pasteeResponse = response.data
 
-                console.log('Pastee response:', response.data);
+                // console.log('Pastee response:', response.data)
             } catch (error) {
-                console.error('Error uploading to Pastee:', error.message);
-                console.log('Pastee response:', error.response.data.errors[0].message);
+                console.error('Error uploading to Pastee:', error.message)
+                console.log('Pastee response:', error.response.data.errors[0].message)
 
-                this.pasteeError[0] = error.message;
-                this.pasteeError[1] = error.response.data.errors[0].message;
+                this.pasteeError[0] = error.message
+                this.pasteeError[1] = error.response.data.errors[0].message
             }
 
             // This is used if having the LUA server handle the export
 
             // try {
-            //     await axios.post(`https://${GetParentResourceName()}/export`, {});
+            //     await axios.post(`https://${GetParentResourceName()}/export`, {})
             // } catch (error) {
-            //     console.error('Error during export request:', error.message);
-            //     console.error('Full error object:', error);
+            //     console.error('Error during export request:', error.message)
+            //     console.error('Full error object:', error)
             // }
         },
+        // Handle messages from the server
         handleMessage(event) {
-            const action = event.data.action;
-            const statements = event.data.statements;
-            const cidName = event.data.citizenidName;
-            const siteName = event.data.siteName;
-            const idName = event.data.idName;
-            const pasteeAPIKey = event.data.pasteeAPIKey;
+            const action = event.data.action
+            const statements = event.data.statements
+            const cidName = event.data.citizenidName
+            const siteName = event.data.siteName
+            const idName = event.data.idName
+            const pasteeAPIKey = event.data.pasteeAPIKey
 
             if (action === "openAudit") {
-                this.openAudit();
+                this.openAudit()
             } else if (action === "updateResults") {
-                this.displayResults(statements);
+                this.displayResults(statements)
             } else if (action === "initVariables") {
-                this.siteName = siteName;
-                this.cidName = cidName;
-                this.selectedOption = cidName;
-                this.idName = idName;
-                this.pasteeAPIKey = pasteeAPIKey;
+                this.siteName = siteName
+                this.cidName = cidName
+                this.selectedOption = cidName
+                this.idName = idName
+                this.pasteeAPIKey = pasteeAPIKey
             }
         },
+        // Close the audit window, reset variables, and send a request to the server to close the audit
         async closeAudit() {
-            this.isAuditOpen = false;
-            this.results = [];
-            this.noSearchResults = false;
-            this.searchData = '';
+            this.isAuditOpen = false
+            this.results = []
+            this.noSearchResults = false
+            this.searchData = ''
             this.pasteeResponse = [],
                 this.pasteeError = []
 
             try {
-                await axios.post(`https://${GetParentResourceName()}/closeAudit`, {});
+                await axios.post(`https://${GetParentResourceName()}/closeAudit`, {})
             } catch (error) {
-                console.error('Error during closeAudit request:', error.message);
-                console.error('Full error object:', error);
+                console.error('Error during closeAudit request:', error.message)
+                console.error('Full error object:', error)
             }
         },
+        // Close Audit if escape key is pressed
         handleKeydown(event) {
             if (event.key === "Escape") {
-                this.closeAudit();
+                this.closeAudit()
             }
         },
+        // If results are found, display them. Otherwise, display no results message
         displayResults(statements) {
             if (statements.length > 0) {
-                this.results = statements;
-                this.noSearchResults = false;
+                this.results = statements
+                this.noSearchResults = false
             } else {
-                this.noResults();
+                this.noResults()
             }
         },
+        // Reset variable if no results found
         noResults() {
-            this.noSearchResults = true;
-            this.results = [];
+            this.noSearchResults = true
+            this.results = []
         },
         formatDate(timestamp) {
-            const date = new Date(timestamp);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            const date = new Date(timestamp)
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
         },
         formatCurrency(value) {
             if (typeof value !== "number") {
-                return value;
+                return value
             }
             return new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
-            }).format(value);
+            }).format(value)
         }
     },
     mounted() {
+        // Add event listeners
         document.addEventListener("keydown", this.handleKeydown)
         window.addEventListener("message", this.handleMessage)
     },
     beforeUnmount() {
-        document.removeEventListener("keydown", this.handleKeydown);
+        // Remove event listeners
+        document.removeEventListener("keydown", this.handleKeydown)
     }
-}).use(vuetify).mount('#app');
+}).use(vuetify).mount('#app')
