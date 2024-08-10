@@ -12,6 +12,7 @@ Wait(100)
 
 ----------- FUNCTIONS -----------
 
+-- Function to initialize NUI variables from the Config file
 function InitNUI()
     SendNUIMessage(
         {
@@ -25,6 +26,7 @@ function InitNUI()
     )
 end
 
+-- Function to open the NUI display
 function SetDisplay(bool)
     SetNuiFocus(bool, bool)
     SendNUIMessage(
@@ -33,12 +35,22 @@ function SetDisplay(bool)
         }
     )
 end
------------ FUNCTIONS -----------
+----------- END FUNCTIONS -----------
+
+----------- Initialize -----------
 
 InitNUI()
 
--- Debug
+----------- End Initialize -----------
+
+----------- DEBUG -----------
+
+-- Debug auto open audit window when restarted
 SetDisplay(true)
+
+----------- END DEBUG -----------
+
+----------- OX_TARGET -----------
 
 -- Set ox_target BoxZone
 exports.ox_target:addBoxZone(
@@ -58,6 +70,10 @@ exports.ox_target:addBoxZone(
     }
 )
 
+----------- END OX_TARGET -----------
+
+----------- EVENT HANDLERS -----------
+
 -- EventHandler for clicking inside of the BoxZone
 AddEventHandler(
     "zo_audit:client:openui",
@@ -66,6 +82,25 @@ AddEventHandler(
         SetDisplay(true)
     end
 )
+
+
+-- Listen for event from server and then sent NUI message to JS with the results from the search query in statementQuery
+RegisterNetEvent('zo_audit:client:displayResults',function (statementQuery)
+    -- print('Got NUI result update request ' .. tprint(statementQuery))
+
+    SendNUIMessage(
+        {
+            action = "updateResults",
+            statements = statementQuery
+        }
+    )
+
+end)
+
+----------- END EVENT HANDLERS -----------
+
+
+----------- NUI CALLBACKS -----------
 
 -- Release NUI focus
 RegisterNUICallback('closeAudit', function(_, cb)
@@ -85,6 +120,9 @@ RegisterNUICallback('search', function(searchData, cb)
     cb('ok')
 end)
 
+
+-- -- This is used if having the LUA server do the export
+
 -- -- Wait for the NUI export callback and then trigger the csv export function
 -- RegisterNUICallback('export', function(_, cb)
 --     -- print(tprint(Statements))
@@ -95,45 +133,4 @@ end)
 --     cb('ok')
 -- end)
 
--- Listen for event from server and then sent NUI message to JS with the results from the search query in statementQuery
-RegisterNetEvent('zo_audit:client:displayResults',function (statementQuery)
-    -- print('Got NUI result update request ' .. tprint(statementQuery))
-
-    SendNUIMessage(
-        {
-            action = "updateResults",
-            statements = statementQuery
-        }
-    )
-
-end)
-
-
-
-
--- debug
-
--- function tprint (tbl, indent)
---     if not indent then indent = 0 end
---     local toprint = string.rep(" ", indent) .. "{\r\n"
---     indent = indent + 2 
---     for k, v in pairs(tbl) do
---       toprint = toprint .. string.rep(" ", indent)
---       if (type(k) == "number") then
---         toprint = toprint .. "[" .. k .. "] = "
---       elseif (type(k) == "string") then
---         toprint = toprint  .. k ..  "= "   
---       end
---       if (type(v) == "number") then
---         toprint = toprint .. v .. ",\r\n"
---       elseif (type(v) == "string") then
---         toprint = toprint .. "\"" .. v .. "\",\r\n"
---       elseif (type(v) == "table") then
---         toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
---       else
---         toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
---       end
---     end
---     toprint = toprint .. string.rep(" ", indent-2) .. "}"
---     return toprint
---   end 
+----------- END NUI CALLBACKS -----------

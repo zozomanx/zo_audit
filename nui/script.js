@@ -1,5 +1,5 @@
-const { createApp } = Vue;
-const { createVuetify } = Vuetify;
+const {createApp} = Vue;
+const {createVuetify} = Vuetify;
 
 const vuetify = createVuetify();
 
@@ -9,19 +9,47 @@ createApp({
             isAuditOpen: true,
             siteName: 'Financial Transaction Audit',
             searchData: '',
+            startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
+            endDate: new Date().toISOString().split('T')[0],
             results: [],
             noSearchResults: false,
             cidName: 'SSN',
             idName: 'ID Number',
             search: '',
+            menu: false,
+            dates: {start: null, end: null},
+            dateRangeText: '',
             searchGrid: '',
-            headers: [
-                { title: 'Citizen ID', value: 'citizenid' },
-                { title: 'Account Name', value: 'account_name' },
-                { title: 'Amount', value: 'amount' },
-                { title: 'Reason', value: 'reason' },
-                { title: 'Statement Type', value: 'statement_type' },
-                { title: 'Date', value: 'date' }
+            headers: [{
+                    title: 'Citizen ID',
+                    value: 'citizenid',
+                    sortable: true
+                },
+                {
+                    title: 'Account Name',
+                    value: 'account_name',
+                    sortable: true
+                },
+                {
+                    title: 'Amount',
+                    value: 'amount',
+                    sortable: true
+                },
+                {
+                    title: 'Reason',
+                    value: 'reason',
+                    sortable: true
+                },
+                {
+                    title: 'Statement Type',
+                    value: 'statement_type',
+                    sortable: true
+                },
+                {
+                    title: 'Date',
+                    value: 'date',
+                    sortable: true
+                }
             ],
             selectedOption: 'SSN',
             pasteeAPIKey: '',
@@ -42,8 +70,8 @@ createApp({
             try {
                 this.pasteeError = []
                 this.pasteeResponse = []
-                
-                if (this.selectedOption === this.cidName) {   
+
+                if (this.selectedOption === this.cidName) {
                     const response = await axios.post(`https://${GetParentResourceName()}/search`, {
                         searchData: this.searchData,
                         selectedOption: this.selectedOption
@@ -53,7 +81,9 @@ createApp({
                         searchData: this.searchData,
                         selectedOption: this.selectedOption
                     });
-                } else { console.error('Invalid search option selected.'); }
+                } else {
+                    console.error('Invalid search option selected.');
+                }
                 // Handle response if needed
             } catch (error) {
                 console.error('Error during search request:', error.message);
@@ -61,7 +91,7 @@ createApp({
             }
         },
         async clickExport() {
-            console.log('Exporting...');
+            // console.log('Exporting...');
             // upload the data in results to Pastee api
             const results = this.results.map(result => {
 
@@ -87,33 +117,33 @@ createApp({
 
             const pasteData = {
                 description: `Audit Results ${this.selectedOption} ${this.searchData}`,
-                sections: [
-                    {
-                        name:  'Audit Results ' + this.selectedOption + ' ' + this.searchData,
-                        syntax: 'text',
-                        contents: csv
-                    }
-                ]
+                sections: [{
+                    name: 'Audit Results ' + this.selectedOption + ' ' + this.searchData,
+                    syntax: 'text',
+                    contents: csv
+                }]
             };
-        
+
             try {
                 const response = await axios.post('https://api.paste.ee/v1/pastes', pasteData, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Auth-Token': this.pasteeAPIKey // Replace this with your Pastee API key
+                        'X-Auth-Token': this.pasteeAPIKey
                     }
                 });
 
                 this.pasteeResponse = response.data;
-        
+
                 console.log('Pastee response:', response.data);
             } catch (error) {
                 console.error('Error uploading to Pastee:', error.message);
                 console.log('Pastee response:', error.response.data.errors[0].message);
-                
+
                 this.pasteeError[0] = error.message;
                 this.pasteeError[1] = error.response.data.errors[0].message;
             }
+
+            // This is used if having the LUA server handle the export
 
             // try {
             //     await axios.post(`https://${GetParentResourceName()}/export`, {});
@@ -148,7 +178,7 @@ createApp({
             this.noSearchResults = false;
             this.searchData = '';
             this.pasteeResponse = [],
-            this.pasteeError = []
+                this.pasteeError = []
 
             try {
                 await axios.post(`https://${GetParentResourceName()}/closeAudit`, {});
@@ -177,6 +207,17 @@ createApp({
         formatDate(timestamp) {
             const date = new Date(timestamp);
             return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        },
+        formatCurrency(value) {
+            if (typeof value !== "number") {
+                return value;
+            }
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
         }
     },
     mounted() {

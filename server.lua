@@ -1,15 +1,15 @@
 -- Initialize Config
 local Config = Config or {}
 local Statements = {}
-local pastebinApiKey = Config.pasteBinAPIKey
+-- local pastebinApiKey = Config.pasteBinAPIKey -- Used if doing export via server
+
+----------- FUNCTIONS -----------
 
 -- Search for statements using citizenid and send results to the player source who requested it
 local function findStatements(src, searchData, selectedOption)
 
 
     CreateThread(function()
-        -- print('thread started')
-
         -- Statements = MySQL.query.await('SELECT * FROM bank_statements where citizenid = ?', {searchData})
         if selectedOption == Config.citizenidName then
             Statements = MySQL.query.await('SELECT * FROM bank_statements where citizenid = ?', {searchData})
@@ -18,15 +18,17 @@ local function findStatements(src, searchData, selectedOption)
         end
 
         end
-       -- Statements = MySQL.query.await('SELECT bs.account_name, bs.amount, bs.citizenid, bs.date, bs.id, bs.reason, bs.statement_type, p.cid FROM bank_statements bs JOIN players p ON bs.citizenid = p.citizenid WHERE p.cid = ?', {searchData})
-
-        -- print(#Statements .. ' statements found')
 
         -- Send event to client to update NUI results
         TriggerClientEvent('zo_audit:client:displayResults', src, Statements)
         -- print('after TriggerClientEvent')
     end)
 end
+
+----------- END FUNCTIONS -----------
+
+
+----------- EVENT HANDLERS -----------
 
 -- Get event from client for searching statements
 RegisterNetEvent('zo_audit:server:search', function(src, searchData, selectedOption)
@@ -36,6 +38,10 @@ RegisterNetEvent('zo_audit:server:search', function(src, searchData, selectedOpt
         findStatements(src, searchData, selectedOption)
     
 end)
+
+----------- END EVENT HANDLERS -----------
+
+-- This is used if having the LUA server do the export
 
 -- -- Listen for the client export event and then export the statements to pastebin
 -- RegisterNetEvent('zo_audit:server:export', function()

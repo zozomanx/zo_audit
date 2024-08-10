@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ siteName }}</title>
+    <!-- CDNs for vue, vuetify, vuetify css, vuetify icons -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/3.6.14/vuetify.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/vuetify@3.6.14/dist/vuetify.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+    <!-- CDNs for axios and papaparse -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
 </head>
@@ -38,9 +40,18 @@
                     ></v-text-field>
 
                     <v-btn type="submit" @click="clickSearch" color="primary" class="search">Search</v-btn>
-                </v-form>
+                    <v-div class="date-range-picker">
+                        <v-span class="ml-4 font-weight-bold">Start Date: </v-span>
+                        <input type="date" id="start-date" name="start-date" v-model="startDate">
                     
-                    <v-divider class="my-4 border-opacity-50" :thickness="5"></v-divider>
+                        <v-span class="ml-4 font-weight-bold">End Date: </v-span>
+                        <input type="date" id="end-date" name="end-date" v-model="endDate">
+                    </v-div>
+                </v-form>
+
+
+                    
+                <v-divider class="my-4 border-opacity-50" :thickness="5"></v-divider>
 
                     <v-text-field
                         v-model="searchGrid"
@@ -58,8 +69,10 @@
                         fixed-header
                         item-key="id"
                         :items-per-page-options="[10, 25, 50, 100]"
-
                     >   
+                    <template v-slot:item.amount="{ item }">
+                        {{ formatCurrency(item.amount) }}
+                    </template>
                         <template v-slot:item.date="{ item }">
                             {{ formatDate(item.date) }}
                         </template>

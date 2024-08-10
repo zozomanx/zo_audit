@@ -2,6 +2,7 @@ fx_version 'cerulean'
 game        'gta5'
 lua54       'yes'
 author      'zozoman'
+description 'An audit script for FIB/CID/DoJ to audit the finances of a person'
 
 
 shared_scripts {
