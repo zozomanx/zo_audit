@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/3.6.14/vuetify.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/vuetify@3.6.14/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
@@ -17,7 +18,7 @@
         <v-app v-if="isAuditOpen" class="v-app">
             <v-container class="py-4" >
                 <v-card class="pa-4">
-                    <v-card-title>{{ siteName }}</v-card-title>
+                    <v-card-title class="text-center text-h3 font-weight-bold">{{ siteName }}</v-card-title>
                     <v-card-subtitle>What would you like to search?</v-card-subtitle>
 
                     <v-select
@@ -30,33 +31,32 @@
                 <v-form @submit.prevent="clickSearch" class="my-2">
                     <v-text-field
                         v-model="searchData"
-                        label="Search"
+                        :label="'Search system for ' + selectedOption"
                         prepend-inner-icon="mdi-magnify"
                         outlined
-                        class="my-2"
+                        class=""
                     ></v-text-field>
 
-                    <v-btn type="submit" @click="clickSearch" color="primary" class="my-2 search">Search</v-btn>
+                    <v-btn type="submit" @click="clickSearch" color="primary" class="search">Search</v-btn>
                 </v-form>
                     
+                    <v-divider class="my-4 border-opacity-50" :thickness="5"></v-divider>
+
                     <v-text-field
                         v-model="searchGrid"
-                        label="Search"
+                        label="Search table"
                         prepend-inner-icon="mdi-magnify"
                         variant="outlined"
                         hide-details
                         single-line
                     ></v-text-field>
 
-                    
-
-                    <v-data-table class="table"
+                    <v-data-table class="table elevation-1 my-4"
                         :headers="headers"
                         :items="results"
                         :search="searchGrid"
                         fixed-header
                         item-key="id"
-                        class="elevation-1 my-4"
                         :items-per-page-options="[10, 25, 50, 100]"
 
                     >   
@@ -69,9 +69,19 @@
                             </v-alert>
                         </template>
                     </v-data-table>
-
-                    <v-btn @click="clickExport" color="primary" class="mx-2" :disabled="isExportDisabled">Export</v-btn>
+                    <v-btn @click="clickExport" color="primary" class="mx-2" :disabled="isExportDisabled || pasteeError[0] || pasteeResponse.success ">Export</v-btn>
                     <v-btn @click="closeAudit" color="error" class="mx-2">Close</v-btn>
+                    <v-alert  v-if="pasteeResponse.success" type="success" class="mt-4 text-center" >
+                        <span>Export successful! Access it at [{{ pasteeResponse.link }}]</span>
+                        <v-tooltip text="Copy and paste the url into a browser, download the file, and rename .txt to .csv">
+                            <template v-slot:activator="{ props }">
+                              <v-icon color="grey-lighten-1" v-bind="props" v-on="on" class="ml-2">
+                                mdi-help-circle
+                              </v-icon>
+                            </template>
+                          </v-tooltip>
+                    </v-alert>
+                    <v-alert v-if="pasteeError[0]" type="error" class="mt-4 text-center">Export failed. Womp womp. Pastee Error: {{ pasteeError[0] }} - {{ pasteeError[1] }}</v-alert>
                 </v-card>
             </v-container>
         </v-app>

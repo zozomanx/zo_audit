@@ -24,7 +24,9 @@ createApp({
                 { title: 'Date', value: 'date' }
             ],
             selectedOption: 'SSN',
-            pasteeAPIKey: ''
+            pasteeAPIKey: '',
+            pasteeResponse: [],
+            pasteeError: []
         };
     },
     computed: {
@@ -38,6 +40,9 @@ createApp({
         },
         async clickSearch() {
             try {
+                this.pasteeError = []
+                this.pasteeResponse = []
+                
                 if (this.selectedOption === this.cidName) {   
                     const response = await axios.post(`https://${GetParentResourceName()}/search`, {
                         searchData: this.searchData,
@@ -98,10 +103,16 @@ createApp({
                         'X-Auth-Token': this.pasteeAPIKey // Replace this with your Pastee API key
                     }
                 });
+
+                this.pasteeResponse = response.data;
         
                 console.log('Pastee response:', response.data);
             } catch (error) {
                 console.error('Error uploading to Pastee:', error.message);
+                console.log('Pastee response:', error.response.data.errors[0].message);
+                
+                this.pasteeError[0] = error.message;
+                this.pasteeError[1] = error.response.data.errors[0].message;
             }
 
             // try {
@@ -136,6 +147,8 @@ createApp({
             this.results = [];
             this.noSearchResults = false;
             this.searchData = '';
+            this.pasteeResponse = [],
+            this.pasteeError = []
 
             try {
                 await axios.post(`https://${GetParentResourceName()}/closeAudit`, {});
