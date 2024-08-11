@@ -6,11 +6,11 @@ If you're looking to track down illegal money transfers or wondering how a certa
 
 I'm new to creating resources so if something is pants-on-head silly please let me know.
 
-Download: [GitHub](https://github.com/zozomanx/zo_gavel/)
-
 Preview: [Youtube](https://youtu.be/Ax-sX8tWbkQ)
 
 No errors on the NUI console during use
+
 https://r2.fivemanage.com/images/Q4pPbAwDQhAQ.png
 The results of the Pastee upload
+
 https://r2.fivemanage.com/images/Qn6nQLR9Fx7o.png
