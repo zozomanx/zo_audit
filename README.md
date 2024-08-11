@@ -10,7 +10,8 @@ Preview: [Youtube](https://youtu.be/Ax-sX8tWbkQ)
 
 No errors on the NUI console during use
 
-https://r2.fivemanage.com/images/Q4pPbAwDQhAQ.png
+![NUI Console](https://r2.fivemanage.com/images/Q4pPbAwDQhAQ.png)
+
 The results of the Pastee upload
 
-https://r2.fivemanage.com/images/Qn6nQLR9Fx7o.png
+![Pastee Upload](https://r2.fivemanage.com/images/Qn6nQLR9Fx7o.png)
