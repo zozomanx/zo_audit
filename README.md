@@ -1,8 +1,10 @@
 # zo_audit
  
-A Fivem resource for investigative agencies like FIB/CID, great to be used with a warrant from DOJ. 
+A Fivem resource for investigative agencies like FIB/CID. Currently set to be controlled via judges (with an approved warrant of course)
 
 If you're looking to track down illegal money transfers or wondering how a certain person always has a large sum of money flowing through them this is the tool for you.
+
+The config lets you customize locations, jobs, and more.
 
 I'm new to creating resources so if something is pants-on-head silly please let me know.
 
