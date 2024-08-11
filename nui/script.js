@@ -6,7 +6,7 @@ const vuetify = createVuetify()
 createApp({
     data() {
         return {
-            isAuditOpen: true,
+            isAuditOpen: false,
             siteName: 'Financial Transaction Audit',
             searchData: '',
             startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
@@ -98,6 +98,17 @@ createApp({
                 console.error('Full error object:', error)
             }
         },
+        // Custom filter for the search bar to handle searching with or without commas
+        customFilter(value, search, item) {
+            if (typeof value === 'number') {
+              // Remove commas from the search string and the value
+              const normalizedSearch = search.replace(/,/g, '')
+              const normalizedValue = value.toString().replace(/,/g, '')
+              return normalizedValue.includes(normalizedSearch)
+            }
+            // Default behavior for non-number fields
+            return value.toString().toLowerCase().includes(search.toLowerCase())
+          },
         // Export the results to a CSV file using Pastee API
         async clickExport() {
             // console.log('Exporting...')

@@ -79,6 +79,7 @@
                         :search="searchGrid"
                         fixed-header
                         item-key="id"
+                        :custom-filter="customFilter"
                         :items-per-page-options="[10, 25, 50, 100]"
                     >   
                     <template v-slot:item.amount="{ item }">
@@ -94,7 +95,7 @@
                         </template>
                     </v-data-table>
                     <!-- Buttons to export and close -->
-                    <v-btn @click="clickExport" color="primary" class="mx-2" :disabled="isExportDisabled || pasteeError[0] || pasteeResponse.success ">Export</v-btn>
+                    <v-btn @click="clickExport" color="primary" class="mx-2" :disabled="isExportDisabled || pasteeError[0] || pasteeResponse.success || !pasteeAPIKey">Export</v-btn>
                     <v-btn @click="closeAudit" color="error" class="mx-2">Close</v-btn>
                     <v-alert  v-if="pasteeResponse.success" type="success" class="mt-4 text-center" >
                         <span>Export successful! Access it at [{{ pasteeResponse.link }}]</span>
@@ -107,6 +108,7 @@
                           </v-tooltip>
                     </v-alert>
                     <v-alert v-if="pasteeError[0]" type="error" class="mt-4 text-center">Export failed. Womp womp. Pastee Error: {{ pasteeError[0] }} - {{ pasteeError[1] }}</v-alert>
+                    <v-alert v-if="!pasteeAPIKey" type="error" class="mt-4 text-center">Missing Pastee API key. Please add it to use export!</v-alert>
                 </v-card>
             </v-container>
         </v-app>

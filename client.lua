@@ -6,9 +6,8 @@ local SiteName = Config.siteName
 local IdName = Config.idName
 local pasteeAPIKey = Config.pasteeAPIKey
 
-
--- Debug
-Wait(100)
+-- Small wait to files to load and pass variables to NUI
+Wait(5000)
 
 ----------- FUNCTIONS -----------
 
@@ -46,39 +45,46 @@ InitNUI()
 ----------- DEBUG -----------
 
 -- Debug auto open audit window when restarted
-SetDisplay(true)
+-- SetDisplay(true)
 
 ----------- END DEBUG -----------
 
------------ OX_TARGET -----------
+----------- TARGET -----------
 
--- Set ox_target BoxZone
-exports.ox_target:addBoxZone(
-    {
-        coords = Config.auditComputer,
-        size = vec3(1, 1, 1),
-        rotation = 45,
-        debug = false,
-        options = {
-            {
-                name = "Audit Terminal",
-                event = "zo_audit:client:openui",
-                icon = "fa-solid fa-computer",
-                label = "Open Audit Terminal"
-            }
-        }
-    }
-)
+if Config.UseTarget then
+    CreateThread(function()
+        for i = 1, #Config.Locations do
+            local v = Config.Locations[i]
+            exports['qb-target']:AddBoxZone('Audit' .. i, vector3(v.x, v.y, v.z), 1, 1, {
+                name = 'Audit' .. i,
+                debugPoly = false,
+                heading = -20,
+                minZ = v.z - 2,
+                maxZ = v.z,
+            }, {
+                options = {
+                    {
+                        type = 'client',
+                        event = 'zo_audit:client:openui',
+                        icon = 'fa-solid fa-computer',
+                        label = 'Open Audit Terminal',
+                        job = Config.allowedJobs
+                    }
+                },
+                distance = 2
+            })
+        end
+    end)
+end
 
------------ END OX_TARGET -----------
+----------- END TARGET -----------
 
 ----------- EVENT HANDLERS -----------
 
 -- EventHandler for clicking inside of the BoxZone
-AddEventHandler(
+RegisterNetEvent(
     "zo_audit:client:openui",
     function()
-        -- print('Target Clicked, opening window.')
         SetDisplay(true)
     end
 )

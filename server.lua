@@ -1,7 +1,33 @@
 -- Initialize Config
 local Config = Config or {}
 local Statements = {}
--- local pastebinApiKey = Config.pasteBinAPIKey -- Used if doing export via server
+
+local QBCore = exports['qb-core']:GetCoreObject()
+
+----------- COMMANDS -----------
+
+-- Add command to open the audit window
+if Config.UseCommand then
+    QBCore.Commands.Add('audit', 'Opens the audit window', {}, false, function(source)
+        local Player = QBCore.Functions.GetPlayer(source)
+        local isAllowed = false
+
+        for _, job in ipairs(Config.allowedJobs) do
+            if Player.PlayerData.job.name == job then
+                isAllowed = true
+                break
+            end
+        end
+
+        if isAllowed then
+            TriggerClientEvent('zo_audit:client:openui', source)
+        else
+            TriggerClientEvent('QBCore:Notify', source, 'You do not have permission to use this command.', 'error')
+        end
+    end, 'user')
+end
+
+----------- END COMMANDS -----------
 
 ----------- FUNCTIONS -----------
 
